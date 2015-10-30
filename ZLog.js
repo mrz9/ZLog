@@ -5,8 +5,25 @@ var LOG_PATH = "",
     DIR_NAME = "";
 var logging = function(type,msg){
     var d = new Date();
-    ZLog.write(type,d.toLocaleDateString(),d.toLocaleString(),msg);
+    write(type,d.toLocaleDateString(),d.toLocaleString(),msg);
 }
+
+function mkdir(type){
+  if(!LOG_PATH) return;
+  var path =  (type) ? type : "";
+  fs.mkdir(LOG_PATH+path, function(err){
+      if(err) console.log(err);
+  })
+}
+
+function write(type,filename,time,msg){
+  fs.appendFile(LOG_PATH+type+"/"+filename+".txt", time+"  "+msg+"\n", function (error) {
+    if (error) {
+      console.error(error);
+    }
+  });
+}
+
 var ZLog = {
   /*可自定义日志文件的目录路径和名字
   *  ZLog.init({path:"/abc/ccc",name:"ZLog"})
@@ -19,42 +36,28 @@ var ZLog = {
       try{
         fs.accessSync(LOG_PATH, fs.R_OK | fs.W_OK);
       }catch(e){
-          ZLog.mkdir();
+          mkdir();
       }
 
       try{
         fs.accessSync(LOG_PATH+"access/", fs.R_OK | fs.W_OK);
       }catch(e){
-          ZLog.mkdir("access");
+          mkdir("access");
       }
 
       try{
         fs.accessSync(LOG_PATH+"error/", fs.R_OK | fs.W_OK);
       }catch(e){
-          ZLog.mkdir("error");
+          mkdir("error");
       }
 
       try{
         fs.accessSync(LOG_PATH+"debug/", fs.R_OK | fs.W_OK);
       }catch(e){
-          ZLog.mkdir("debug");
+          mkdir("debug");
       }
 
 
-  },
-  mkdir : function(type){
-    if(!LOG_PATH) return;
-    var path =  (type) ? type : "";
-    fs.mkdir(LOG_PATH+path, function(err){
-        if(err) console.log(err);
-    })
-  },
-  write : function(type,filename,time,msg){
-    fs.appendFile(LOG_PATH+type+"/"+filename+".txt", time+"  "+msg+"\n", function (error) {
-    	if (error) {
-        console.error(error);
-    	}
-    });
   },
   access : function(msg){
     logging("access",msg);

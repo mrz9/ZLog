@@ -1,4 +1,4 @@
-var ZLog = require('ZLog.js');
+var ZLog = require('./ZLog.js');
 
     ZLog.init();//e.g {path:__dirname,name:"ZLog"} 可配置日志目录的路径以及目录的名字
     ZLog.access("成功了耶");
